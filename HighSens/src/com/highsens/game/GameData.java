@@ -532,4 +532,8 @@ public class GameData implements IStrategy {
 		}
 
 	}
+	public void dispose()
+	{
+		this.dispose();
+	}
 }

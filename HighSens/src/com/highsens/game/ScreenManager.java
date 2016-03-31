@@ -35,7 +35,7 @@ public final class ScreenManager {
 	public static void hideTitleScreen()
 	{
 		title.setVisible(false);
-		title.dispose();
+		title.dispatch();
 		displayMainScreen();
 	}
 	
