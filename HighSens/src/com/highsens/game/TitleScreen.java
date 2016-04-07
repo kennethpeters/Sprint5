@@ -133,7 +133,7 @@ public class TitleScreen extends JFrame {
 	public void dispatch()
 	{
 		this.dispose();
-		gameData.dispose();
+		//gameData.dispose();
 		demoPanel.dispose();
 	}
 	}

@@ -41,7 +41,7 @@ public class MainScreen extends JFrame {
 		btnStart.setContentAreaFilled(false);
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ScreenManager.displayLevelSelectScreen();
+				ScreenManager.displayGameScreen();
 				ScreenManager.hideMainScreen();
 			}
 		});
@@ -120,20 +120,22 @@ public class MainScreen extends JFrame {
 		lblUser.setBounds(181, 47, 180, 23);
 		getContentPane().add(lblUser);
 		
-		JButton btnNewButton = new JButton("New button");
+		/*JButton btnNewButton = new JButton("New button");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ScreenManager.displayTitleScreen();
 			}
 		});
-		btnNewButton.setBounds(234, 93, 89, 23);
+		btnNewButton.setBounds(237, 123, 89, 23);
 		getContentPane().add(btnNewButton);
+		*/
 		
 		
 	}
 	public void setUserLabel()
 	{
-		lblUser.setText("Current user: "+ ScreenManager.getUser());
+		lblUser.setText("Current user: "+  CurrentPlayer.getName());
 		lblUser.setVisible(true);
+		
 	}
 }

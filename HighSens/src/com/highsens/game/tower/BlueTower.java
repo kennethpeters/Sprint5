@@ -20,6 +20,9 @@ public class BlueTower extends AbstractTower implements Tower, GameFigure {
 	Point2D.Float target;
 	private int state = STATE_IDLE;
 
+	private String imagePath = System.getProperty("user.dir");
+	private String separator = System.getProperty("file.separator");
+
 	Monster m;
 	GameData gd;
 	private GameFigure currentTarget;
@@ -72,9 +75,7 @@ public class BlueTower extends AbstractTower implements Tower, GameFigure {
 
 	@Override
 	public void update() {
-		if (currentTarget != null && 
-				(currentTarget.getState() == STATE_DONE ||
-				!this.collision(currentTarget))){
+		if (currentTarget != null && (currentTarget.getState() == STATE_DONE || !this.collision(currentTarget))) {
 			currentTarget = null;
 		}
 		switch (state) {
@@ -125,7 +126,7 @@ public class BlueTower extends AbstractTower implements Tower, GameFigure {
 	public double getY() {
 		return y;
 	}
-	
+
 	public void setLevel(int level) {
 		// TODO Auto-generated method stub
 
@@ -133,9 +134,9 @@ public class BlueTower extends AbstractTower implements Tower, GameFigure {
 
 	@Override
 	public boolean contains(float f, float g) {
-		// TODO Auto-generated method stub
 		return false;
 	}
+
 	public GameFigure getCurrentTarget() {
 		return currentTarget;
 	}
@@ -147,7 +148,7 @@ public class BlueTower extends AbstractTower implements Tower, GameFigure {
 	@Override
 	public void setIsAngry(boolean t) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -166,5 +167,11 @@ public class BlueTower extends AbstractTower implements Tower, GameFigure {
 	public double getHeight() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public Image getUpgradeTowerImage() {
+		return getImage(imagePath + separator + "images" + separator + "BlueTowerUpgrade.png");
+
 	}
 }

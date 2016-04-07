@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import com.highsens.game.tower.AbstractTower;
 import com.highsens.game.tower.ArrowTower;
 import com.highsens.game.tower.BlueTower;
+import com.highsens.game.tower.GreenTower;
 import com.highsens.game.tower.Landmine;
 import javax.swing.JTextField;
 import java.awt.Font;
@@ -52,11 +53,12 @@ public class GameScreen extends JFrame implements ActionListener, MouseListener,
 	private final JButton btnQuit;
 	private final JToggleButton blueToggle;
 	private final JToggleButton arrowToggle;
-	private final JToggleButton redToggle;
+	private final JToggleButton greenToggle;
 	private final JToggleButton landmineToggle;
 	private final JToggleButton muteButton;
 	private final JPanel northPanel;
 	private final JToggleButton lighting_spell;
+    private final JLabel label_1;
 
 	private boolean menuVisible;
 	private String imagePath = System.getProperty("user.dir");
@@ -74,12 +76,14 @@ public class GameScreen extends JFrame implements ActionListener, MouseListener,
 	
 	private static ArrowTower ArrowTower;
 	private static BlueTower BlueTower;
+	private static GreenTower GreenTower;
 	private static Landmine Landmine;
 	public static ScreenManager GUI;
 	private AudioPlayer sound;
 	public ArrayList TowerPosition;
 	boolean ArrowPlaceable = false;
 	boolean BluePlaceable = false;
+	boolean GreenPlaceable = false;
 	boolean LandminePlaceable = false;
 	boolean lightingPlaceable = false;
 	private int sellPosition = 0;
@@ -91,6 +95,7 @@ public class GameScreen extends JFrame implements ActionListener, MouseListener,
 	private JTextField txtReady;
 	ImageIcon arrowTowerIcon = createImageIcon("ArrowTower.png");
 	ImageIcon blueTowerIcon = createImageIcon("BlueTower.png");
+	ImageIcon greenTowerIcon = createImageIcon("GreenTower.png");
 	ImageIcon landmineIcon = createImageIcon("Landmine.png");
 	ImageIcon muteButtonIcon = createImageIcon("mute.png");
 	ImageIcon lighting_spellIcon = createImageIcon("lighting_spell.png");
@@ -198,24 +203,28 @@ public class GameScreen extends JFrame implements ActionListener, MouseListener,
 		towerPanel.add(arrowToggle);
 		
 		
-		redToggle = new JToggleButton("", (Icon) null);
-		towerPanel.add(redToggle);
+		greenToggle = new JToggleButton("", greenTowerIcon);
+		greenToggle.setEnabled(false);
+		greenToggle.addActionListener(this);
+		towerPanel.add(greenToggle);
 		
-		JLabel label_1 = new JLabel("<html> Blue Tower  <br> Cost: 100g </html>\r\n");
+		label_1 = new JLabel("<html> Blue Tower  <br> Cost: 100g </html>\r\n");
 		label_1.setVerticalAlignment(SwingConstants.TOP);
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		towerPanel.add(label_1);
+		label_1.setVisible(false);
 		
 		JLabel label = new JLabel("<html> Arrow Tower  <br> Cost: 50g </html>\r\n");
 		towerPanel.add(label);
 		label.setVerticalAlignment(SwingConstants.TOP);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		lblNewLabel = new JLabel("<html> Red Tower <br> Cost: 200g </html>");
+		lblNewLabel = new JLabel("<html> Green Tower <br> Cost: 200g </html>");
 		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		towerPanel.add(lblNewLabel);
 		muteButton.addActionListener(this);
+		lblNewLabel.setVisible(false);
 		
 		btnQuit = new JButton("Quit to main menu\r\n");
 		btnQuit.setBounds(439, 589, 146, 21);
@@ -256,15 +265,24 @@ public class GameScreen extends JFrame implements ActionListener, MouseListener,
 				gameData.setWaves(gameData.wave = gameData.wave + 1);
 				gameData.resetCreepCount();
 				btnWave.setText("Next Wave");
+				checkUnlockedTowers();
 			}
 		});
 		btnWave.setOpaque(true);
 
 		
-		
-		
 
 	}
+	
+	public void checkUnlockedTowers()
+	{
+		blueToggle.setVisible(CurrentPlayer.getBlueTowerPurchased());
+		label_1.setVisible(CurrentPlayer.getBlueTowerPurchased());
+		greenToggle.setVisible(CurrentPlayer.getGreenTowerPurchased());
+		lblNewLabel.setVisible(CurrentPlayer.getGreenTowerPurchased());
+	}
+	
+	
 
 	private ImageIcon createImageIcon(String path) {
 		java.net.URL imgURL = GameScreen.class.getResource(path);
@@ -390,12 +408,15 @@ public class GameScreen extends JFrame implements ActionListener, MouseListener,
 			northPanel.setEnabled(false);
 			blueToggle.setEnabled(true);
 			arrowToggle.setEnabled(true);
+			greenToggle.setEnabled(true);
 			lighting_spell.setEnabled(true);
 			landmineToggle.setEnabled(true);
 			gamePanel.startGame();
 			btnWave.setEnabled(true);
 			btnStore.setEnabled(true);
 			btnQuit.setEnabled(true);
+			blueToggle.setVisible(false);
+			greenToggle.setVisible(false);
 
 		} else if (e.getSource() == quitButton) {
 			animator.running = false;
@@ -424,6 +445,21 @@ public class GameScreen extends JFrame implements ActionListener, MouseListener,
 			{
 				lightingPlaceable = false;
 				BluePlaceable = true;
+				ArrowPlaceable = false;
+				LandminePlaceable = false;
+				arrowToggle.setSelected(false);
+				lighting_spell.setSelected(false);
+				landmineToggle.setSelected(false);
+			}
+		}
+		
+		else if (e.getSource() == greenToggle)
+		{
+			if(greenToggle.isSelected())
+			{
+				GreenPlaceable = true;
+				lightingPlaceable = false;
+				BluePlaceable = false;
 				ArrowPlaceable = false;
 				LandminePlaceable = false;
 				arrowToggle.setSelected(false);
@@ -564,6 +600,25 @@ public class GameScreen extends JFrame implements ActionListener, MouseListener,
 					
 				}
 				
+			}
+		}
+		if (gameData.money >= 150 && GreenPlaceable == true ) {
+			if (!(x >= 0 && x <= 1300 && y >= 160 && y <= 270)) {
+				if (GreenPlaceable == true) {
+					gameData.moneyManager("GreenTower", gameData.getMoney());
+					GreenTower = new GreenTower(x - 25, y - 50, gameData);
+					gameData.figures.add(GreenTower);
+					GreenPlaceable = false;
+					greenToggle.setSelected(false);
+				}
+				if (LandminePlaceable == true) {
+					gameData.moneyManager("Landmine", gameData.getMoney());
+					Landmine = new Landmine(x - 50  , 278 , gameData);
+					gameData.armsFigures.add(Landmine);
+					LandminePlaceable = false;
+					landmineToggle.setSelected(false);
+					
+				}
 			}
 		}
 	}

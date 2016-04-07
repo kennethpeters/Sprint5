@@ -13,6 +13,8 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -21,6 +23,8 @@ public class LoginScreen extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtName;
+	public LoginFunctions login = new LoginFunctions();
+	private PlayersData data;
 
 	public LoginScreen() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,6 +45,7 @@ public class LoginScreen extends JFrame {
 		cbUsers.setBounds(131, 85, 172, 20);
 		contentPane.add(cbUsers);
 		
+		
 		txtName = new JTextField();
 		txtName.setBounds(131, 154, 172, 20);
 		contentPane.add(txtName);
@@ -51,6 +56,9 @@ public class LoginScreen extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!txtName.getText().isEmpty())
 					cbUsers.addItem(txtName.getText());
+					login.registerPlayer(txtName.getText());
+					ScreenManager.setUser();
+					ScreenManager.hideLoginScreen();
 			}
 		});
 		btnNewButton.setBounds(168, 185, 112, 23);
@@ -61,7 +69,12 @@ public class LoginScreen extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if(cbUsers.getSelectedIndex() > -1)
 				{
-					ScreenManager.setUser( cbUsers.getSelectedItem().toString());
+					//ScreenManager.setUser( cbUsers.getSelectedItem().toString());
+					
+					//login.tryLogin(cbUsers.getSelectedItem().toString());
+					//login.tryLogin(txtName.getText());
+					login.setCurrentUser(cbUsers.getSelectedItem().toString());
+					ScreenManager.setUser();
 					ScreenManager.hideLoginScreen();
 				}
 			}
